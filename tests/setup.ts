@@ -6,3 +6,4 @@ process.env.MARKETS_JSON = '[{"id":"0x000000000000000000000000000000000000000000
 process.env.SUPABASE_URL = "https://example.supabase.co";
 process.env.SUPABASE_SERVICE_ROLE_KEY = "test-service-role-key-with-minimum-length";
 process.env.DELIVERY_MODE = "shadow";
+process.env.APP_URL = "https://app.example.com";

@@ -6,7 +6,7 @@ Run [`migrations/001_margin_notification_worker.sql`](./migrations/001_margin_no
 
 ## 2. Configure the worker
 
-Deploy this directory with Node.js 20+ or the included Dockerfile. Copy `.env.example` into the hosting provider's environment settings.
+Deploy this directory with Node.js 22+ or the included Dockerfile. Copy `.env.example` into the hosting provider's environment settings.
 
 Required values:
 
@@ -42,9 +42,7 @@ Generate the VAPID pair once with `npx web-push generate-vapid-keys`.
 
 ```bash
 npm ci
-npm run typecheck
-npm test
-npm run build
+npm run check
 ```
 
 Deploy the container, then confirm that `/healthz` and `/readyz` return HTTP 200. Run [`operations/verify_shadow_rollout.sql`](./operations/verify_shadow_rollout.sql) and confirm a current leader heartbeat, advancing event scans and no worker error.

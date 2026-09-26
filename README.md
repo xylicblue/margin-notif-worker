@@ -50,10 +50,8 @@ Move through these modes only after validating the prior mode in production.
 4. Install and verify:
 
    ```bash
-   npm install
-   npm run typecheck
-   npm test
-   npm run build
+   npm ci
+   npm run check
    npm start
    ```
 
