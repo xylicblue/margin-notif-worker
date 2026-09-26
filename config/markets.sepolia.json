@@ -1,0 +1,21 @@
+[
+  { "id": "0x7c611d543b87d4eecced3a16f8db373340d784390882ad3e2fd76f257a51cf55", "label": "A100-PERP" },
+  { "id": "0x69df00e859e1b007896c59653bb3ca35622fdf2bf46c2fd9fea7ffa7d88b6378", "label": "AWS-H100-PERP" },
+  { "id": "0x2492e86fcfe9b174434dfca2c27205159a34cf4e90f0ec7a1605fae91a7e7bbd", "label": "AZURE-H100-PERP" },
+  { "id": "0x8c78c8c17cc7712fe1b17592a2c0a7f814f8ec784de0fbb4ae6573e3457e11dd", "label": "GCP-H100-PERP" },
+  { "id": "0xb1bae2ea6c465ce4acb7d8a4a16a8899c9cc94ac35b5a82403875c6b2aa34f3e", "label": "T4-PERP" },
+  { "id": "0xa583a10b2c0991c6f416501cbea19895d7becde9398eff1b7f60ef1120547d53", "label": "H100-GPU-PERP" },
+  { "id": "0xf4aa47cc83b0d01511ca8025a996421dda6fbab1764466da4b0de6408d3db2e2", "label": "H100-HyperScalers-PERP" },
+  { "id": "0x61f05fafb6842941c9a7d6839378de32d97a2de181b4db0e276b8d2093b61866", "label": "ORACLE-H200-PERPETUAL" },
+  { "id": "0x12aa394c59dbf446e7ba1d3ab66f4629761c27d0dbacf484da0f4b205260c8fc", "label": "AWS-H200-PERPETUAL" },
+  { "id": "0xf8444beb26f5f34e8d5ec6c988b1023100cd68287fa48066b54e428188ffa447", "label": "COREWEAVE-H200-PERPETUAL" },
+  { "id": "0xb654d9eedc69b55e0fe883d03cae37d13fdacc319a5a1f507bb33875e0e14201", "label": "GCP-H200-PERPETUAL" },
+  { "id": "0xc845b4b5cdd753d1ad772bc105e5c4ddddff19c3da674c69da5c9f1a810bb872", "label": "AZURE-H200-PERPETUAL" },
+  { "id": "0x02164b06b5fff171a87dbb519e6d639871a0cfbc0e44d411313256d0168b60fe", "label": "B200-PERP-V2" },
+  { "id": "0xb7269b1b771cba59419ca55da90b293f89e72d986f7f50cb542e22797ad46f14", "label": "AWS-B200-PERP" },
+  { "id": "0x409078466c3ce47594bb7591497b09163aae7262d949015e19a7c4c947434d80", "label": "ORACLE-B200-PERP" },
+  { "id": "0x75da99206b1151e67ba75b25d99b3e2609e1d80b86bb0339fe90a7c4e64930f0", "label": "COREWEAVE-B200-PERP" },
+  { "id": "0xcf1ddf7c363a1165e075f2c8ddcb837d0a5417ee0c7209660c101c804fb1dd97", "label": "GCP-B200-PERP" },
+  { "id": "0x44830e9eceb656b494dfe3cff6e46a6774961143bd28655e8232777def9ba92c", "label": "H200-PERP-V2" },
+  { "id": "0x477dc2e232406bbfce22f7ed7abfde0177a869d41729ed1f3e169f1014716ce8", "label": "H100-non-HyperScalers-PERP-V2" }
+]

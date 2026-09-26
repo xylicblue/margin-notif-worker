@@ -1,0 +1,8 @@
+process.env.RPC_URL = "https://rpc.example.com";
+process.env.CHAIN_ID = "11155111";
+process.env.CLEARING_HOUSE_ADDRESS = "0x0000000000000000000000000000000000000001";
+process.env.DEPLOYMENT_BLOCK = "0";
+process.env.MARKETS_JSON = '[{"id":"0x0000000000000000000000000000000000000000000000000000000000000001","label":"H100-PERP"}]';
+process.env.SUPABASE_URL = "https://example.supabase.co";
+process.env.SUPABASE_SERVICE_ROLE_KEY = "test-service-role-key-with-minimum-length";
+process.env.DELIVERY_MODE = "shadow";
