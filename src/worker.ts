@@ -5,7 +5,8 @@ import { logger } from "./config/logger.js";
 import { processDeliveryPass } from "./notifications/delivery.js";
 import { publishLiquidationNotification } from "./notifications/service.js";
 import { scanConfirmedEvents } from "./positions/event-scanner.js";
-import { processRiskPass } from "./risk/processor.js";
+import { markPositionsTouched, processRiskPass } from "./risk/processor.js";
+import { startRpcStatsLogging, stopRpcStatsLogging } from "./chain/rpc-stats.js";
 import type { WorkerHealth } from "./types.js";
 
 type TaskName = "lease" | "events" | "risk" | "delivery" | "heartbeat";
@@ -29,6 +30,7 @@ export class MarginNotificationWorker {
   private stopping = false;
 
   async start(): Promise<void> {
+    startRpcStatsLogging(env.RPC_STATS_INTERVAL_MS);
     await this.renewLease();
     if (this.health.leader) {
       await this.runEvents();
@@ -44,7 +46,15 @@ export class MarginNotificationWorker {
     this.schedule("delivery", env.DELIVERY_INTERVAL_MS, () => this.runDelivery());
     this.schedule("heartbeat", env.HEARTBEAT_INTERVAL_MS, () => this.runHeartbeat());
 
-    logger.info({ instanceId: env.instanceId, deliveryMode: env.DELIVERY_MODE, leader: this.health.leader }, "Margin notification worker started");
+    logger.info({
+      instanceId: env.instanceId,
+      deliveryMode: env.DELIVERY_MODE,
+      leader: this.health.leader,
+      eventSource: env.EVENT_SOURCE,
+      pollIntervalMs: env.POLL_INTERVAL_MS,
+      eventScanIntervalMs: env.EVENT_SCAN_INTERVAL_MS,
+      healthyRecheckMs: env.HEALTHY_RECHECK_MS,
+    }, "Margin notification worker started");
   }
 
   async stop(): Promise<void> {
@@ -52,6 +62,7 @@ export class MarginNotificationWorker {
     for (const timer of this.timers) clearInterval(timer);
     this.timers.length = 0;
     this.health.ready = false;
+    stopRpcStatsLogging();
     await this.runHeartbeat().catch(() => undefined);
     logger.info("Margin notification worker stopped");
   }
@@ -89,6 +100,7 @@ export class MarginNotificationWorker {
       if (!this.health.leader) return;
       const result = await scanConfirmedEvents();
       if (result) {
+        markPositionsTouched(result.touchedPositions);
         for (const notice of result.liquidationNotices) {
           await publishLiquidationNotification(notice);
         }
@@ -98,6 +110,8 @@ export class MarginNotificationWorker {
           trades: result.tradeEvents,
           liquidations: result.liquidationEvents,
           bootstrapped: result.bootstrapped,
+          touchedPositions: result.touchedPositions.length,
+          source: result.source,
         }, "Confirmed event scan completed");
       }
       this.health.lastEventScanAt = new Date().toISOString();

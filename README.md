@@ -6,7 +6,7 @@ Standalone, read-only monitoring service for margin-risk warnings and liquidatio
 
 This service:
 
-- reads confirmed `TradeExecuted` and `LiquidationExecuted` events;
+- reads confirmed `TradeExecuted` and `LiquidationExecuted` events (by default from the canonical PnL indexer's `canonical_pnl_events` table; `EVENT_SOURCE=chain` reads them with `eth_getLogs`);
 - reads current positions, prices, margin ratios, and market risk parameters;
 - records auditable risk episodes and observations;
 - creates idempotent in-app notifications; and
@@ -73,6 +73,14 @@ Generate a Web Push VAPID pair once with `npx web-push generate-vapid-keys`. Put
 ## Event bootstrap
 
 On first start the scanner begins at `DEPLOYMENT_BLOCK` and reconstructs currently open positions from `TradeExecuted.newSize`. Historical liquidation events are not sent to clients. Once the scanner reaches the confirmed chain head, new confirmed liquidation events become eligible for B1/B2 notifications.
+
+With the default `EVENT_SOURCE=indexer` the scanner makes no RPC calls: it reads `canonical_pnl_events` rows (one per transaction, trader and market; `new_size` is the final size) up to `canonical_indexer_checkpoints.last_block_number`, and "confirmed head" means the indexer checkpoint. Position changes and liquidation notices therefore lag the indexer; a stale checkpoint is logged as a warning.
+
+## RPC usage
+
+- Risk reads go through Multicall3: per tick, one `eth_call` per `RISK_MULTICALL_CHUNK` due positions, containing the per-market risk params, oracle price and mark price once per market plus `getPosition`, `getMarginRatio` and `isLiquidatable` per position. Market addresses from the registry are cached for 10 minutes.
+- Tiered schedule: positions near the alert thresholds are read every `POLL_INTERVAL_MS`, healthy ones every `HEALTHY_RECHECK_MS`, and positions touched by a new event on the next tick.
+- A `RPC_STATS` log line reports RPC calls by method every `RPC_STATS_INTERVAL_MS`.
 
 The block cursor is stored after each successful chunk. Restarts resume from that cursor. Notification idempotency keys, one-open-episode constraints, and the outbox ledger protect against duplicates.
 

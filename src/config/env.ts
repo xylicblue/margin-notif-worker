@@ -14,8 +14,20 @@ const schema = z.object({
   SUPABASE_URL: z.string().url(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20),
   DELIVERY_MODE: z.enum(["shadow", "in_app", "all"]).default("shadow"),
-  POLL_INTERVAL_MS: z.coerce.number().int().min(1_000).default(10_000),
-  EVENT_SCAN_INTERVAL_MS: z.coerce.number().int().min(1_000).default(5_000),
+  POLL_INTERVAL_MS: z.coerce.number().int().min(1_000).default(30_000),
+  EVENT_SCAN_INTERVAL_MS: z.coerce.number().int().min(1_000).default(30_000),
+  // "indexer" reads canonical_pnl_events (no RPC); "chain" is the legacy getLogs scanner.
+  EVENT_SOURCE: z.enum(["indexer", "chain"]).default("indexer"),
+  INDEXER_NAME: z.string().min(1).default("canonical-pnl-indexer"),
+  INDEXER_PAGE_SIZE: z.coerce.number().int().min(10).max(1_000).default(500),
+  INDEXER_STALE_WARN_MS: z.coerce.number().int().min(10_000).default(600_000),
+  // Tiered risk schedule: healthy positions far from the alert thresholds are re-read this often.
+  HEALTHY_RECHECK_MS: z.coerce.number().int().min(1_000).default(300_000),
+  // A position is "near" (read every tick) when coverage <= WARNING_MULTIPLIER * (1 + RISK_NEAR_BUFFER).
+  RISK_NEAR_BUFFER: z.coerce.number().min(0).max(10).default(0.5),
+  RISK_MULTICALL_CHUNK: z.coerce.number().int().min(1).max(500).default(50),
+  MULTICALL3_ADDRESS: address.default("0xcA11bde05977b3631167028862bE2a173976CA11"),
+  RPC_STATS_INTERVAL_MS: z.coerce.number().int().min(10_000).default(600_000),
   DELIVERY_INTERVAL_MS: z.coerce.number().int().min(500).default(2_000),
   DELIVERY_MAX_ATTEMPTS: z.coerce.number().int().min(1).max(20).default(5),
   DELIVERY_RETRY_BASE_SECONDS: z.coerce.number().int().min(5).max(3_600).default(30),
