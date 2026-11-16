@@ -52,7 +52,7 @@ export async function upsertPosition(input: {
 export async function listActivePositions(limit = env.MAX_POSITION_BATCH): Promise<ActivePosition[]> {
   const { data, error } = await supabase
     .from("margin_active_positions")
-    .select("id,chain_id,account,market_id,market_label,last_size,first_seen_block,last_seen_block,active,last_reconciled_at")
+    .select("id,chain_id,account,market_id,market_label,last_size::text,first_seen_block,last_seen_block,active,last_reconciled_at")
     .eq("chain_id", env.CHAIN_ID)
     .eq("active", true)
     .order("last_reconciled_at", { ascending: true, nullsFirst: true })
